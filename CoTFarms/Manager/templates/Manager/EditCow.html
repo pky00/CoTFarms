@@ -1,0 +1,15 @@
+{% extends "Manager/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div style="max-width: 30%;">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ editForm|crispy }}
+        <a href="{% url 'manager-cow-home' %}" role="button" class="btn btn-danger" style="margin-top: 10px;">Cancel</a>
+        <input type="submit" value="Save Changes" class="btn btn-success" style="margin-top: 10px;">
+    </form>
+</div>
+
+{% endblock content %}

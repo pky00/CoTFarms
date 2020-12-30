@@ -1,0 +1,21 @@
+{% extends "Manager/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div style="max-width: 30%;">
+
+    {% if added %}
+        <div class="alert alert-success" role="alert">
+            Cow {{ cowID }} had been added !!!
+        </div>
+    {% endif %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ addForm|crispy }}
+        <input type="submit" value="Add Cow" class="btn btn-success" style="margin-top: 10px;">
+    </form>
+</div>
+
+{% endblock content %}
