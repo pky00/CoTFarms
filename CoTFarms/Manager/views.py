@@ -3,17 +3,17 @@ from django.http import HttpResponseRedirect
 from .models import *
 from .forms import addCowForm, editCowForm
 from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView
+
 
 
 # Create your views here.
-@login_required
-def home(request):
-
-    context = {
-        'cows': Cow.objects.all(),
-    }
-
-    return render(request, 'Manager/Cows.html', context)
+class CowListView(ListView):
+    model = Cow
+    template_name = 'Manager/Cows.html'
+    context_object_name = "cows"
+    ordering = ['number']
+    paginate_by = 8
 
 
 @login_required

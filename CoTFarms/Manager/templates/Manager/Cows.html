@@ -56,4 +56,18 @@
         </tbody>
     </table>
 
+    <div class="d-flex justify-content-center">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Previous</a>
+        {% endif %}
+
+        <a href="" class="btn btn-info" style="margin-left: 5px; margin-right: 5px;">{{ page_obj.number }}</a>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Last</a>
+        {% endif %}
+    </div>
+
 {% endblock content %}
