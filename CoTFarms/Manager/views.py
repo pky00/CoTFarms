@@ -4,8 +4,22 @@ from .models import *
 from .forms import addCowForm, editCowForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
+from datetime import date
 
+@login_required
+def CowMilk(request):
 
+    today = date.today()
+
+    milkings = CowMilking.objects.filter(date__year=today.year,
+                                       date__month=today.month,
+                                       date__day=today.day)
+
+    context = {
+        'milkings': milkings,
+    }
+
+    return render(request, 'Manager/CowMilk.html', context)
 
 # Create your views here.
 class CowListView(ListView):

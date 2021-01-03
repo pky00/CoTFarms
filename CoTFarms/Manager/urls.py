@@ -7,4 +7,5 @@ urlpatterns = [
     path('', login_required(CowListView.as_view()), name='manager-cow-home'),
     path('AddCow/', views.AddCow, name='manager-cow-addcow'),
     path('EditCow/<int:cowID>', views.EditCow, name='manager-cow-editcow'),
+    path('Milk/',views.CowMilk,name='manager-cow-milk'),
 ]
