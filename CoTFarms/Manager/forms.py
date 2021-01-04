@@ -1,7 +1,9 @@
 from django import forms
-from .models import CowType, Cow
+from .models import CowType, Cow, CowMilking
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from datetime import date
+
 
 
 def pkExists(val):
@@ -41,3 +43,12 @@ class editCowForm(forms.ModelForm):
     class Meta:
         model = Cow
         fields = ['number', 'dob', 'Type', 'mother', 'gender', 'dead', 'isMilking']
+
+class addCowMilkForm(forms.ModelForm):
+    cow = forms.ModelChoiceField(label="Cow",required=True,queryset=Cow.objects.filter(dead=False,isMilking=True))
+    amount = forms.IntegerField(label="Amount",required=True, help_text="Unit : Kg")
+    date = forms.DateTimeField(label="Date",required=True, help_text="Format : YYYY-MM-DD", initial=date.today)
+
+    class Meta:
+        model = CowMilking
+        fields = ['cow','amount','date']

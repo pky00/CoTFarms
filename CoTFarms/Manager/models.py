@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from datetime import date
 
 class CowType(models.Model):
     Type = models.CharField(max_length=30)
@@ -24,7 +25,7 @@ class Cow(models.Model):
 class CowMilking(models.Model):
     cow = models.ForeignKey(Cow, on_delete=models.SET_NULL, null=True)
     amount = models.IntegerField()
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateTimeField(default=date.today)
 
 class CowMilkSale(models.Model):
     amount = models.IntegerField()

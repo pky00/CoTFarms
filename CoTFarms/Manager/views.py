@@ -1,25 +1,38 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .models import *
-from .forms import addCowForm, editCowForm
+from .forms import addCowForm, editCowForm, addCowMilkForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from datetime import date
+from django.shortcuts import redirect
 
 @login_required
 def CowMilk(request):
 
     today = date.today()
+    milkings = CowMilking.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day)
 
-    milkings = CowMilking.objects.filter(date__year=today.year,
-                                       date__month=today.month,
-                                       date__day=today.day)
+    if request.method == 'POST' :
+        addForm = addCowMilkForm(request.POST)
+        if addForm.is_valid():
+            addForm.save()
+            addForm = addCowMilkForm()
+    else:
+        addForm = addCowMilkForm()
 
     context = {
         'milkings': milkings,
-    }
+        'addForm': addForm,
+    }   
 
     return render(request, 'Manager/CowMilk.html', context)
+
+@login_required
+def CowMilkDelete(request,deleteID=None):
+    CowMilking.objects.get(id=deleteID).delete()
+    return redirect("manager-cow-milk")
+
 
 # Create your views here.
 class CowListView(ListView):
