@@ -24,7 +24,7 @@ class Cow(models.Model):
 
 class CowMilking(models.Model):
     cow = models.ForeignKey(Cow, on_delete=models.SET_NULL, null=True)
-    amount = models.IntegerField()
+    amount = models.FloatField()
     date = models.DateTimeField(default=date.today)
 
 class CowMilkSale(models.Model):

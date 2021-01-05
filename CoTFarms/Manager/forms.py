@@ -46,7 +46,7 @@ class editCowForm(forms.ModelForm):
 
 class addCowMilkForm(forms.ModelForm):
     cow = forms.ModelChoiceField(label="Cow",required=True,queryset=Cow.objects.filter(dead=False,isMilking=True))
-    amount = forms.IntegerField(label="Amount",required=True, help_text="Unit : Kg")
+    amount = forms.FloatField(label="Amount",required=True, help_text="Unit : Kg")
     date = forms.DateTimeField(label="Date",required=True, help_text="Format : YYYY-MM-DD", initial=date.today)
 
     class Meta:

@@ -1,5 +1,6 @@
 {% extends "Manager/base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
 
@@ -27,7 +28,7 @@
         <thead>
             <tr>
                 <th scope="col">Cow</th>
-                <th scope="col">Amount</th>
+                <th scope="col">Amount(Kg)</th>
                 <th scope="col">Date</th>
                 <th scope="col"></th>
             </tr>
@@ -49,5 +50,44 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-center mb-5">
+        {% if milkings.has_previous %}
+            <a href="?page=1" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">First</a>
+            <a href="?page={{ milkings.previous_page_number }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Previous</a>
+        {% endif %}
+
+        <a href="" class="btn btn-info" style="margin-left: 5px; margin-right: 5px;">{{ milkings.number }}</a>
+
+        {% if milkings.has_next %}
+            <a href="?page={{ milkings.next_page_number }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Next</a>
+            <a href="?page={{ milkings.paginator.num_pages }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Last</a>
+        {% endif %}
+    </div>
+
+    <h1>Statistics</h1>
+
+    <div class="mb-5 mt-3">
+        <div class="row" >
+            <div class="col bg-danger text-white card myCard">
+                Total : <p>{{sum}}</p>
+            </div>
+            <div class="col bg-warning text-white card myCard">
+                Average : <p>{{avg}}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col bg-success text-white card myCard">
+                Number :  <p>{{number}}</p>
+            </div>
+            <div class="col bg-primary text-white card myCard">
+                Max : <p>{{max}}</p>
+            </div>
+            <div class="col bg-info text-white card myCard">
+                Min : <p>{{min}}</p>
+            </div>
+        </div>
+    </div>
 
 {% endblock content %}

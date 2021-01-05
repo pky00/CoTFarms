@@ -1,17 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .models import *
 from .forms import addCowForm, editCowForm, addCowMilkForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from datetime import date
-from django.shortcuts import redirect
+from django.core.paginator import Paginator
+from django.db.models import Avg, Sum, Max, Min
 
 @login_required
 def CowMilk(request):
-
-    today = date.today()
-    milkings = CowMilking.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day)
 
     if request.method == 'POST' :
         addForm = addCowMilkForm(request.POST)
@@ -21,9 +19,28 @@ def CowMilk(request):
     else:
         addForm = addCowMilkForm()
 
+    today = date.today()
+    milkings = CowMilking.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day).order_by('-amount')
+
+    paginator = Paginator(milkings, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    avg = int(list(milkings.aggregate(Avg('amount')).values())[0])
+    sum = int(list(milkings.aggregate(Sum('amount')).values())[0])
+    max = int(list(milkings.aggregate(Max('amount')).values())[0])
+    min = int(list(milkings.aggregate(Min('amount')).values())[0])
+    number = milkings.count()
+
+
     context = {
-        'milkings': milkings,
+        'milkings': page_obj,
         'addForm': addForm,
+        'avg': avg,
+        'sum': sum,
+        'max': max,
+        'min': min,
+        'number': number,
     }   
 
     return render(request, 'Manager/CowMilk.html', context)
