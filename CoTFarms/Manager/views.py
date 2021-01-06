@@ -26,11 +26,18 @@ def CowMilk(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    avg = int(list(milkings.aggregate(Avg('amount')).values())[0])
-    sum = int(list(milkings.aggregate(Sum('amount')).values())[0])
-    max = int(list(milkings.aggregate(Max('amount')).values())[0])
-    min = int(list(milkings.aggregate(Min('amount')).values())[0])
+    avg = "N/A"
+    sum = "N/A"
+    max = "N/A"
+    min = "N/A"
     number = milkings.count()
+
+    if number != 0:
+        avg = int(list(milkings.aggregate(Avg('amount')).values())[0])
+        sum = int(list(milkings.aggregate(Sum('amount')).values())[0])
+        max = int(list(milkings.aggregate(Max('amount')).values())[0])
+        min = int(list(milkings.aggregate(Min('amount')).values())[0])
+    
 
 
     context = {

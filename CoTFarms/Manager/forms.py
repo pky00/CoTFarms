@@ -35,7 +35,7 @@ class editCowForm(forms.ModelForm):
     number = forms.IntegerField(label="Cow ID", required=False, help_text="Must be Unique", disabled=True)
     dob = forms.DateField(label="Date of Birth", required=True, help_text="Format : YYYY-MM-DD !!!Anything else won't work!!!")
     Type = forms.ModelChoiceField(label="Type",queryset=CowType.objects.all(), required=True)
-    mother = forms.ModelChoiceField(label="Mother",queryset=Cow.objects.filter(dead=False))
+    mother = forms.ModelChoiceField(label="Mother",queryset=Cow.objects.filter(dead=False), required=False)
     gender = forms.ChoiceField(label="Gender", choices=Gender, required=True)
     dead = forms.BooleanField(label="Dead", required=False)
     isMilking = forms.BooleanField(label="Milking", required=False)
