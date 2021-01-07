@@ -1,0 +1,93 @@
+{% extends "Manager/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+    <div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row">
+                    <div class="col-md-3 mb-0">
+                        {{ addForm.amount|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3 mb-0">
+                        {{ addForm.price|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3 mb-0">
+                        {{ addForm.date|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3 mt-4">
+                        <input type="submit" value="Add" class="btn btn-success" >
+                    </div>
+              </div>
+        </form>
+    </div>
+
+    <table class="table table-dark table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Amount(Kg)</th>
+                <th scope="col">Price(LBP)</th>
+                <th scope="col">Date</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for milksale in milksales %}            
+            <tr>
+                <th scope="row">{{milksale.amount}}</th>
+                <td>{{milksale.price}}</td>
+                <td>{{milksale.date}}</td>
+                <td>
+                    <a type="button" href="{% url 'manager-cow-milk-sale-delete' milksale.pk %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center mb-5">
+        {% if milksales.has_previous %}
+            <a href="?page=1" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">First</a>
+            <a href="?page={{ milksales.previous_page_number }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Previous</a>
+        {% endif %}
+
+        <a href="" class="btn btn-info" style="margin-left: 5px; margin-right: 5px;">{{ milksales.number }}</a>
+
+        {% if milksale.has_next %}
+            <a href="?page={{ milksales.next_page_number }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Next</a>
+            <a href="?page={{ milksales.paginator.num_pages }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Last</a>
+        {% endif %}
+    </div>
+
+    <h1>Statistics</h1>
+
+    <div class="mb-5 mt-3">
+        <div class="row" >
+            <div class="col bg-danger text-white card myCard">
+                Total : <p>{{sum}}</p>
+            </div>
+            <div class="col bg-warning text-white card myCard">
+                Average : <p>{{avg}}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col bg-success text-white card myCard">
+                Number :  <p>{{number}}</p>
+            </div>
+            <div class="col bg-primary text-white card myCard">
+                Max : <p>{{max}}</p>
+            </div>
+            <div class="col bg-info text-white card myCard">
+                Min : <p>{{min}}</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

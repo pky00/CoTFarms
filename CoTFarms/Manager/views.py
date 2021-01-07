@@ -1,12 +1,61 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .models import *
-from .forms import addCowForm, editCowForm, addCowMilkForm
+from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from datetime import date
 from django.core.paginator import Paginator
 from django.db.models import Avg, Sum, Max, Min
+
+@login_required
+def cowMilkSale(request):
+
+    if request.method == 'POST' :
+        addForm = addCowMilkSaleForm(request.POST)
+        if addForm.is_valid():
+            addForm.save()
+            addForm = addCowMilkSaleForm()
+    else:
+        addForm = addCowMilkSaleForm()
+
+    today = date.today()
+    milksales = CowMilkSale.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day).order_by('-amount')
+
+    paginator = Paginator(milksales, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    avg = "N/A"
+    sum = "N/A"
+    max = "N/A"
+    min = "N/A"
+    number = milksales.count()
+
+    if number != 0:
+        avg = int(list(milksales.aggregate(Avg('price')).values())[0])
+        sum = int(list(milksales.aggregate(Sum('price')).values())[0])
+        max = int(list(milksales.aggregate(Max('price')).values())[0])
+        min = int(list(milksales.aggregate(Min('price')).values())[0])
+    
+
+
+    context = {
+        'milksales': page_obj,
+        'addForm': addForm,
+        'avg': avg,
+        'sum': sum,
+        'max': max,
+        'min': min,
+        'number': number,
+    }   
+
+    return render(request, 'Manager/CowMilkSale.html', context)
+
+@login_required
+def CowMilkSaleDelete(request,deleteID=None):
+    CowMilkSale.objects.get(id=deleteID).delete()
+    return redirect("manager-cow-milk-sale")
 
 @login_required
 def CowMilk(request):

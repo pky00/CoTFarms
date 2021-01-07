@@ -1,5 +1,5 @@
 from django import forms
-from .models import CowType, Cow, CowMilking
+from .models import CowType, Cow, CowMilking, CowMilkSale
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from datetime import date
@@ -52,3 +52,12 @@ class addCowMilkForm(forms.ModelForm):
     class Meta:
         model = CowMilking
         fields = ['cow','amount','date']
+
+class addCowMilkSaleForm(forms.ModelForm):
+    amount = forms.IntegerField(label="Amount" ,required=True ,help_text="Unit : Kg")
+    date = forms.DateTimeField(label="Date" ,required=True ,initial=date.today)
+    price = forms.FloatField(label="Price" ,required=True ,help_text="Unit : LBP")
+
+    class Meta:
+        model = CowMilkSale
+        fields = ['amount','date','price']

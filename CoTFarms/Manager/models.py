@@ -33,5 +33,7 @@ class CowMilkSale(models.Model):
     price = models.FloatField()
 
 class CowPregnancy(models.Model):
-    cow = models.ForeignKey(Cow,on_delete=models.CASCADE)
+    cow = models.ForeignKey(Cow,on_delete=models.CASCADE,related_name='%(class)s_mother')
     dop = models.DateTimeField() #date of pregnancy
+    success = models.BooleanField(null=True)
+    child = models.ForeignKey(Cow,on_delete=models.CASCADE, null=True, related_name='%(class)s_child')
