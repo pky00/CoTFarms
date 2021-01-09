@@ -1,5 +1,5 @@
 from django import forms
-from .models import CowType, Cow, CowMilking, CowMilkSale
+from .models import CowType, Cow, CowMilking, CowMilkSale, CowPregnancy
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from datetime import date
@@ -61,3 +61,13 @@ class addCowMilkSaleForm(forms.ModelForm):
     class Meta:
         model = CowMilkSale
         fields = ['amount','date','price']
+
+class addCowPregnancyForm(forms.ModelForm):
+    cow = forms.ModelChoiceField(label="Cow",required=True,queryset=Cow.objects.filter(dead=False,gender='F'))
+    dop = forms.DateTimeField(label="Date of Pregnancy",required=True,initial=date.today) #date of pregnancy
+    success = forms.BooleanField(label="Success",required=False)
+    child = forms.ModelChoiceField(label="Child",required=False,queryset=Cow.objects.filter(dead=False))
+
+    class Meta:
+        model = CowPregnancy
+        fields = ['cow','dop','success','child']

@@ -4,9 +4,40 @@ from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
-from datetime import date
+from datetime import date, datetime, timedelta
 from django.core.paginator import Paginator
 from django.db.models import Avg, Sum, Max, Min
+
+@login_required
+def cowPregnancy(request):
+
+    if request.method == 'POST' :
+        addForm = addCowPregnancyForm(request.POST)
+        if addForm.is_valid():
+            addForm.save()
+            addForm = addCowPregnancyForm()
+    else:
+        addForm = addCowPregnancyForm()
+
+    end = date.today()
+    start = end - timedelta(days=365)
+    pregnancies = CowPregnancy.objects.filter(dop__range=[start, end]).order_by('-dop')
+
+    paginator = Paginator(pregnancies, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'pregnancies': page_obj,
+        'addForm': addForm,
+    }   
+
+    return render(request, 'Manager/CowPregnancy.html', context)
+
+@login_required
+def CowPregnancyDelete(request,deleteID=None):
+    CowPregnancy.objects.get(id=deleteID).delete()
+    return redirect("manager-cow-pregnancy")
 
 @login_required
 def cowMilkSale(request):

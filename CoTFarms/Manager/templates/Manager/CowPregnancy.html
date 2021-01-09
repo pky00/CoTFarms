@@ -1,0 +1,73 @@
+{% extends "Manager/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+    <div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row">
+                    <div class="col-md-3 mb-0">
+                        {{ addForm.cow|as_crispy_field }}
+                    </div>
+                    <div class="col-md-2 md-0">
+                        {{ addForm.dop|as_crispy_field }}
+                    </div>
+                    <div class="col-md-2 mb-0  mt-4">
+                        {{ addForm.success|as_crispy_field }}
+					</div>
+					<div class="col-md-2 mb-0">
+                        {{ addForm.child|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3 mt-4">
+                        <input type="submit" value="Add" class="btn btn-success" >
+                    </div>
+              </div>
+        </form>
+    </div>
+
+    <table class="table table-dark table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Mother</th>
+                <th scope="col">Date</th>
+				<th scope="col">Success</th>
+				<th scope="col">Child</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for preg in pregnancies %}            
+            <tr>
+                <th scope="row">{{preg.cow}}</th>
+                <td>{{preg.dop}}</td>
+				<td>{{preg.success}}</td>
+				<td>{{preg.child}}</td>
+                <td>
+                    <a type="button" href="{% url 'manager-cow-pregnancy-delete' preg.pk %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center mb-5">
+        {% if pregnancies.has_previous %}
+            <a href="?page=1" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">First</a>
+            <a href="?page={{ pregnancies.previous_page_number }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Previous</a>
+        {% endif %}
+
+        <a href="" class="btn btn-info" style="margin-left: 5px; margin-right: 5px;">{{ pregnancies.number }}</a>
+
+        {% if pregnancies.has_next %}
+            <a href="?page={{ pregnancies.next_page_number }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Next</a>
+            <a href="?page={{ pregnancies.paginator.num_pages }}" class="btn btn-outline-info" style="margin-left: 5px; margin-right: 5px;">Last</a>
+        {% endif %}
+	</div>
+	
+{% endblock content %}
